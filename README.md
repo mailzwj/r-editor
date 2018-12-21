@@ -2,7 +2,7 @@
 
 ### 预览
 
-![REditor](http://seejs.me/r-editor/r-editor.gif)
+![REditor](http://seejs.me/r-editor/editor.gif)
 
 [在线预览](http://seejs.me/r-editor/demo/index.html)
 
