@@ -16,7 +16,7 @@ npm install --save @mailzwj/r-editor
 
 * ES6 Module
 ```jsx
-import REditor from 'r-editor';
+import REditor from '@mailzwj/r-editor';
 
 <REditor 
     value="Enter键换行，Ctrl/Command+Enter键获取内容"
