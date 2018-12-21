@@ -9,7 +9,7 @@
 ### 安装
 
 ```bash
-npm install --save r-editor
+npm install --save @mailzwj/r-editor
 ```
 
 ### 使用方法
