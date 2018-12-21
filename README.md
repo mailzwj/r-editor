@@ -6,6 +6,12 @@
 
 [在线预览](http://seejs.me/r-editor/demo/index.html)
 
+### 安装
+
+```bash
+npm install --save r-editor
+```
+
 ### 使用方法
 
 * ES6 Module
