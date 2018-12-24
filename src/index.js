@@ -323,6 +323,23 @@ class ChatEditor extends Component {
         }
     }
 
+    getHtml() {
+        if (this.editor) {
+            return this.editor.innerHTML;
+        } else {
+            return '';
+        }
+    }
+
+    getJson() {
+        if (this.editor) {
+            const html = this.editor.childNodes;
+            return this.convertToJson(html);
+        } else {
+            return {};
+        }
+    }
+
     handleEditorClick = (ev) => {
         ev.stopPropagation();
         if (this.dblTimer) {

@@ -26,7 +26,8 @@ class Demo extends Component {
     constructor() {
         super();
         this.state = {
-            result: ''
+            result: '',
+            serializeResult: ''
         };
     }
 
@@ -52,17 +53,46 @@ class Demo extends Component {
         });
     }
 
+    getEditor = (editor) => {
+        this.msgEditor = editor;
+    }
+
+    getHtml = () => {
+        if (this.msgEditor) {
+            console.log(this.msgEditor.getHtml());
+            this.setState({
+                serializeResult: this.msgEditor.getHtml()
+            });
+        }
+    }
+
+    getJson = () => {
+        if (this.msgEditor) {
+            this.setState({
+                serializeResult: JSON.stringify(this.msgEditor.getJson(), null, 4)
+            });
+        }
+    }
+
     render() {
         return (
             <div className="cw" id="J_CW">
                 <div className="row">
                     <REditor value="简易版，不支持Mention（提到）功能，输入“:”触发表情选择（使用默认表情列表）<br/>支持粘贴图文/图片/截图<br/>Enter查看内容，Ctrl/Command+Enter换行" onFinish={this.getEditorContent} />
                 </div>
-                <div className="row">
-                    <REditor 
+                <div className="row row2">
+                    <REditor
+                        ref={this.getEditor}
                         value="输入“@”选提到的人，输入“:”触发表情选择（使用默认表情列表），支持粘贴图文/图片/截图"
                         mentionList={mentionList}
                         onFinish={this.getEditorContent} />
+                    <div className="output">
+                        <div className="act">
+                            <input type="button" onClick={this.getHtml} value="Get html" />
+                            <input type="button" onClick={this.getJson} value="Get json" />
+                        </div>
+                        <textarea className="ta" readOnly value={this.state.serializeResult} />
+                    </div>
                 </div>
                 <div className="row">
                     <REditor 
