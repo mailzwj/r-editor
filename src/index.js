@@ -143,7 +143,7 @@ class ChatEditor extends Component {
             nextChar = range.toString();
             range.collapse(true);
         } catch(e) {}
-        newNode.className = 'at-user';
+        newNode.className = 'J_Mention at-user';
         newNode.setAttribute('data-pin', m.pin);
         newNode.setAttribute('data-nick-name', m.nickName);
         newNode.innerText = '@' + m.nickName;
@@ -166,7 +166,7 @@ class ChatEditor extends Component {
         const selections = window.getSelection();
         const range = selections.getRangeAt(0);
         const newNode = document.createElement('img');
-        newNode.className = 'sys-emoji';
+        newNode.className = 'J_Emoji sys-emoji';
         newNode.setAttribute('data-code', e.url.substr(-7, 3));
         newNode.setAttribute('src', e.url);
         range.insertNode(newNode);
@@ -183,7 +183,7 @@ class ChatEditor extends Component {
         const selections = window.getSelection();
         const range = selections.getRangeAt(0);
         const newNode = document.createElement('img');
-        newNode.className = 'paste-image';
+        newNode.className = 'J_PasteImage paste-image';
         newNode.setAttribute('src', src);
         range.insertNode(newNode);
         browser.safari && selections.addRange(range);
@@ -230,7 +230,7 @@ class ChatEditor extends Component {
                         // rs = rs.replace(/\s+style=("|')[^\1]*\1/g, '');
                         // 方式二：只保留src属性，追加class属性
                         rs = rs.replace(/(<img)([\s\S]*?)(\ssrc=("|')[^\4]*?\4)[^>]+?>/g, ($, $1, $2, $3, $4) => {
-                            return $1 + ' class="paste-image"' + $3 + '>';
+                            return $1 + ' class="J_PasteImage paste-image"' + $3 + '>';
                         });
                         // console.log(rs);
                         this.insertHtml(rs);
@@ -323,8 +323,54 @@ class ChatEditor extends Component {
         }
     }
 
+    handleEditorClick = (ev) => {
+        ev.stopPropagation();
+        if (this.dblTimer) {
+            clearTimeout(this.dblTimer);
+        }
+        this.dblTimer = setTimeout(() => {
+            const target = ev.target;
+            const classList = target.classList;
+            if (classList) {
+                const sels = window.getSelection();
+                const range = sels.getRangeAt(0);
+                if (classList.contains('J_PasteImage')
+                    || classList.contains('J_Emoji')
+                    || classList.contains('J_Mention')) {
+                    range.selectNode(target);
+                }
+            }
+        }, 300);
+    }
+
+    // handleEditorDblClick = (ev) => {
+    //     ev.stopPropagation();
+    //     if (this.dblTimer) {
+    //         clearTimeout(this.dblTimer);
+    //         this.dblTimer = null;
+    //     }
+    //     const target = ev.target;
+    //     const classList = target.classList;
+    //     if (classList) {
+    //         if (classList.contains('J_PasteImage')) {
+    //             console.log(target.src);
+    //         }
+    //     }
+    // }
+
     setEditor = (editor) => {
         this.editor = editor;
+        if (editor) {
+            this.delegateEvent();
+        }
+    }
+
+    delegateEvent = () => {
+        this.editor.removeEventListener('click', this.handleEditorClick, false);
+        this.editor.addEventListener('click', this.handleEditorClick, false);
+
+        // this.editor.removeEventListener('dblclick', this.handleEditorDblClick, false);
+        // this.editor.addEventListener('dblclick', this.handleEditorDblClick, false);
     }
 
     render() {
