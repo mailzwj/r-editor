@@ -345,6 +345,7 @@ class ChatEditor extends Component {
         if (this.dblTimer) {
             clearTimeout(this.dblTimer);
         }
+        this.editor.focus();
         this.dblTimer = setTimeout(() => {
             const target = ev.target;
             const classList = target.classList;
@@ -357,23 +358,25 @@ class ChatEditor extends Component {
                     range.selectNode(target);
                 }
             }
-        }, 300);
+        }, 100);
     }
 
-    // handleEditorDblClick = (ev) => {
-    //     ev.stopPropagation();
-    //     if (this.dblTimer) {
-    //         clearTimeout(this.dblTimer);
-    //         this.dblTimer = null;
-    //     }
-    //     const target = ev.target;
-    //     const classList = target.classList;
-    //     if (classList) {
-    //         if (classList.contains('J_PasteImage')) {
-    //             console.log(target.src);
-    //         }
-    //     }
-    // }
+    handleEditorDblClick = (ev) => {
+        ev.stopPropagation();
+        if (this.dblTimer) {
+            clearTimeout(this.dblTimer);
+            this.dblTimer = null;
+        }
+        const target = ev.target;
+        const classList = target.classList;
+        if (classList) {
+            if (classList.contains('J_PasteImage')) {
+                this.setState({
+                    currentImage: target.src
+                });
+            }
+        }
+    }
 
     setEditor = (editor) => {
         this.editor = editor;
@@ -386,8 +389,15 @@ class ChatEditor extends Component {
         this.editor.removeEventListener('click', this.handleEditorClick, false);
         this.editor.addEventListener('click', this.handleEditorClick, false);
 
-        // this.editor.removeEventListener('dblclick', this.handleEditorDblClick, false);
-        // this.editor.addEventListener('dblclick', this.handleEditorDblClick, false);
+        this.editor.removeEventListener('dblclick', this.handleEditorDblClick, false);
+        this.editor.addEventListener('dblclick', this.handleEditorDblClick, false);
+    }
+
+    closeLightBox = (ev) => {
+        ev.stopPropagation();
+        this.setState({
+            currentImage: null
+        });
     }
 
     render() {
@@ -429,6 +439,11 @@ class ChatEditor extends Component {
                         }
                     </div>
                 : null}
+                {_state.currentImage ?
+                    <div className="editor-lb" onClick={this.closeLightBox}>
+                        <img src={_state.currentImage} />
+                    </div>
+                :null}
                 <div className="editor"
                     // ref="editor"
                     ref={this.setEditor}

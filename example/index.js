@@ -59,7 +59,7 @@ class Demo extends Component {
 
     getHtml = () => {
         if (this.msgEditor) {
-            console.log(this.msgEditor.getHtml());
+            // console.log(this.msgEditor.getHtml());
             this.setState({
                 serializeResult: this.msgEditor.getHtml()
             });
