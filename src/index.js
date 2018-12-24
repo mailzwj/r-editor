@@ -351,11 +351,18 @@ class ChatEditor extends Component {
             const classList = target.classList;
             if (classList) {
                 const sels = window.getSelection();
-                const range = sels.getRangeAt(0);
                 if (classList.contains('J_PasteImage')
                     || classList.contains('J_Emoji')
                     || classList.contains('J_Mention')) {
-                    range.selectNode(target);
+                    if (browser.safari) {
+                        sels.removeAllRanges();
+                        const range = document.createRange();
+                        range.selectNode(target);
+                        sels.addRange(range);
+                    } else {
+                        const range = sels.getRangeAt(0);
+                        range.selectNode(target);
+                    }
                 }
             }
         }, 100);
