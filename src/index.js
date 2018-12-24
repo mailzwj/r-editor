@@ -71,30 +71,31 @@ class ChatEditor extends Component {
         const selections = window.getSelection();
         const range = selections.getRangeAt(0);
         this.lastRange = range;
-        if (range.startOffset > 0) {
+        let lastChar;
+        try {
             range.setStart(range.startContainer, range.startOffset - 1);
-            const lastChar = range.toString();
-            range.collapse();
-            if (lastChar === '@') {
-                this.setState({
-                    showMention: true
-                });
-                document.removeEventListener('click', this.hideMention, false);
-                document.addEventListener('click', this.hideMention, false);
-            } else if (lastChar === ':') {
-                this.setState({
-                    showEmoji: true
-                });
-                document.removeEventListener('click', this.hideEmoji, false);
-                document.addEventListener('click', this.hideEmoji, false);
-            } else {
-                document.removeEventListener('click', this.hideMention, false);
-                document.removeEventListener('click', this.hideEmoji, false);
-                this.setState({
-                    showEmoji: false,
-                    showMention: false
-                });
-            }
+            lastChar = range.toString();
+        } catch(e) {}
+        range.collapse();
+        if (lastChar === '@') {
+            this.setState({
+                showMention: true
+            });
+            document.removeEventListener('click', this.hideMention, false);
+            document.addEventListener('click', this.hideMention, false);
+        } else if (lastChar === ':') {
+            this.setState({
+                showEmoji: true
+            });
+            document.removeEventListener('click', this.hideEmoji, false);
+            document.addEventListener('click', this.hideEmoji, false);
+        } else {
+            document.removeEventListener('click', this.hideMention, false);
+            document.removeEventListener('click', this.hideEmoji, false);
+            this.setState({
+                showEmoji: false,
+                showMention: false
+            });
         }
     }
 
@@ -205,14 +206,16 @@ class ChatEditor extends Component {
             for (let f = 0, flen = dataTransfer.files.length; f < flen; f++) {
                 const file = dataTransfer.files[f];
                 // console.log(file);
-                let reader = new FileReader();
-                reader.addEventListener('load', (ev) => {
-                    const target = ev.target;
-                    const src = target.result;
-                    this.insertImageFile(src);
-                    reader = null;
-                });
-                reader.readAsDataURL(file);
+                if (file.type.match(/^image\//)) {
+                    let reader = new FileReader();
+                    reader.addEventListener('load', (ev) => {
+                        const target = ev.target;
+                        const src = target.result;
+                        this.insertImageFile(src);
+                        reader = null;
+                    });
+                    reader.readAsDataURL(file);
+                }
             }
             ev.preventDefault();
         } else if (dataTransfer.items && dataTransfer.items.length) {
@@ -245,19 +248,24 @@ class ChatEditor extends Component {
         };
         let rowCount = 0;
         nodes = Array.prototype.slice.call(nodes);
-        nodes.forEach(n => {
+        nodes.forEach((n, idx) => {
             let item;
             if (n.nodeType === 1) { // Element
                 let content;
-                if (n.tagName.toLowerCase() === 'div') {
+                const tagName = n.tagName.toLowerCase();
+                if (tagName === 'div' && idx > 0) { // 避免第一行就是div的时候，多出一个空行
                     rowCount++;
+                }
+                if (tagName === 'div') {
+                    // rowCount++;
                     content = n.innerHTML;
                 } else {
                     content = n.outerHTML;
                 }
                 item = rs.rows[rowCount] || {source: [], content: ''};
                 item.source.push(n);
-                item.content += content || '';
+                item.content += (content || '');
+                // item.content += (content || '').replace(/(^(<br\/?>)+)|((<br\/?>)+$)/g, '');
             } else if (n.nodeType === 3) { // Text
                 item = rs.rows[rowCount] || {source: [], content: ''};
                 item.source.push(n);

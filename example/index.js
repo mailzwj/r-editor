@@ -37,9 +37,9 @@ class Demo extends Component {
     getEditorContent = (data) => {
         const { rows = [] } = data;
         let msgArr = rows.map(r => {
-            return r.content.replace(/(<br\/?>)+$/, '');
+            return r.content;
         });
-        const newMsg = msgArr.join('<br/>').replace(/(<br\/?>)+$/, '');
+        const newMsg = msgArr.join('<br/>');
         // console.log(newMsg);
         this.setState({
             result: newMsg
