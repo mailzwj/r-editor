@@ -42,6 +42,8 @@ class ChatEditor extends Component {
         super(props);
         this.state = {
             showMention: false,
+            mentionTop: 0,
+            mentionLeft: -1,
             showEmoji: false
         };
     }
@@ -70,7 +72,7 @@ class ChatEditor extends Component {
         }
         const selections = window.getSelection();
         const range = selections.getRangeAt(0);
-        this.lastRange = range;
+        // this.lastRange = range;
         let lastChar;
         try {
             range.setStart(range.startContainer, range.startOffset - 1);
@@ -103,12 +105,14 @@ class ChatEditor extends Component {
         this.setState({
             showMention: false
         });
+        document.removeEventListener('click', this.hideMention, false);
     }
 
     hideEmoji = () => {
         this.setState({
             showEmoji: false
         });
+        document.removeEventListener('click', this.hideEmoji, false);
     }
 
     // onBlur = () => {
@@ -407,6 +411,12 @@ class ChatEditor extends Component {
         });
     }
 
+    onSelect = (ev) => {
+        const selection = window.getSelection();
+        const range = selection.getRangeAt(0);
+        this.lastRange = range;
+    }
+
     render() {
         const _props = this.props || {};
         const _state = this.state || {};
@@ -414,7 +424,7 @@ class ChatEditor extends Component {
         return (
             <div className="chat-editor" onClick={this.focusEditor}>
                 {mentionList.length && _state.showMention ?
-                    <div className="mention-list">
+                    <div className="mention-list" style={{top: _state.mentionTop, left: _state.mentionLeft}}>
                         {
                             mentionList.map(m => {
                                 return (
@@ -460,6 +470,7 @@ class ChatEditor extends Component {
                     onFocus={this.onFocus}
                     onPaste={this.onPaste}
                     onKeyDown={this.onKeyDown}
+                    onSelect={this.onSelect}
                     dangerouslySetInnerHTML={{__html: value || '<br/>'}}
                 />
             </div>
