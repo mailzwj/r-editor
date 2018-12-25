@@ -151,7 +151,7 @@ class ChatEditor extends Component {
         range.insertNode(newNode);
         browser.safari && selections.addRange(range);
         selections.collapseToEnd();
-        if (!nextChar) {
+        if (!nextChar && !newNode.nextElementSibling) {
             document.execCommand('insertHtml', null, '<br/>');
         }
     }
