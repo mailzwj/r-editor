@@ -33,6 +33,11 @@ import REditor from '@mailzwj/r-editor';
 * `onFinish<Function>`: 接收编辑器中内容的函数，触发`finishKey`的时候调用
 * `emojiList<Array>`: 自定义表情列表，不传则使用默认表情。元素为包含`title`、`title_cn`、`url`的对象，详见[demo](http://seejs.me/r-editor/demo/index.html)
 
+### 实例方法
+
+* `getHtml()`: 返回编辑器内部的HTML代码
+* `getJson()`: 以JSON格式返回编辑器内部的数据，`rows`数组存储每行的数据
+
 ### 功能列表
 
 - [x] 文本输入

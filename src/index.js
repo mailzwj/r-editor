@@ -64,6 +64,28 @@ class ChatEditor extends Component {
         }
     }
 
+    calculatePosition = (range) => {
+        let rangePos;
+        let rs;
+        const editor = this.editor;
+        const editorPos = editor.getBoundingClientRect();
+        if (range.getClientRects) {
+            rangePos = range.getClientRects()[0]; // range.getBoundingClientRect不兼容Safari
+        }
+        if (rangePos) {
+            rs = {
+                mentionTop: rangePos.top - editorPos.top,
+                mentionLeft: rangePos.left - editorPos.left
+            };
+        } else {
+            rs = {
+                mentionTop: 0,
+                mentionLeft: -1
+            };
+        }
+        return rs;
+    }
+
     onInput = (ev) => {
         // console.log(ev);
         const content = ev.target.innerText;
@@ -80,7 +102,9 @@ class ChatEditor extends Component {
         } catch(e) {}
         range.collapse();
         if (lastChar === '@') {
+            const pos = this.calculatePosition(range);
             this.setState({
+                ...pos,
                 showMention: true
             });
             document.removeEventListener('click', this.hideMention, false);

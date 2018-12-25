@@ -1,6 +1,6 @@
 {
   "name": "@mailzwj/r-editor",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "一个基于React的消息编辑器插件，包含Mention、表情、粘贴图片等功能。",
   "main": "dist/index.min.js",
   "scripts": {
