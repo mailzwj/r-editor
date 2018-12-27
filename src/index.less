@@ -30,7 +30,8 @@
         position: absolute;
         top: 0;
         left: -1px;
-        max-width: 96px;
+        padding: 2px;
+        max-width: 292px;
         background-color: #fff;
         border: 1px solid #e8e8e8;
         transform: translateY(-100%);
@@ -38,17 +39,20 @@
 
         .emoji {
             float: left;
-            width: 32px;
-            height: 32px;
+            padding: 2px;
+            width: 28px;
+            height: 28px;
             cursor: pointer;
 
             &:hover {
-                background-color: #f8f8f8;
+                background-color: #eaeaea;
             }
 
             img {
+                width: 28px;
+                height: 28px;
                 vertical-align: middle;
-                max-width: 100%;
+                // max-width: 100%;
             }
         }
     }

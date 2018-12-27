@@ -1,41 +1,14 @@
 import React, { Component } from 'react';
+import emojis from './emoji';
 
 import './index.less';
 
 const ua = navigator.userAgent;
 const browser = {
-    safari: ua.match(/version\/[\d\.]+\ssafari\/[\d\.]+/i),
+    safari: ua.match(/version\/[\d\.]+\s(mobile\/\w+\s)?safari\/[\d\.]+/i),
     chrome: ua.match(/chrome\/[\d\.]+/i),
     firefox: ua.match(/firefox\/[\d\.]+/i)
 };
-
-const emojis = [
-    {
-        title: 'Heart',
-        title_cn: '心',
-        url: 'http://storage.jd.com/open-chat-web/dd_web/emoji/s01.png'
-    },
-    {
-        title: 'Touch',
-        title_cn: '摸头',
-        url: 'http://storage.jd.com/open-chat-web/dd_web/emoji/s02.png'
-    },
-    {
-        title: 'Dis',
-        title_cn: '鄙视',
-        url: 'http://storage.jd.com/open-chat-web/dd_web/emoji/s03.png'
-    },
-    {
-        title: 'Daku',
-        title_cn: '大哭',
-        url: 'http://storage.jd.com/open-chat-web/dd_web/emoji/s04.png'
-    },
-    {
-        title: 'Laugh',
-        title_cn: '大笑',
-        url: 'http://storage.jd.com/open-chat-web/dd_web/emoji/s05.png'
-    }
-];
 
 class ChatEditor extends Component {
     constructor(props) {
@@ -88,10 +61,10 @@ class ChatEditor extends Component {
 
     onInput = (ev) => {
         // console.log(ev);
-        const content = ev.target.innerText;
-        if (!content) {
-            ev.target.innerHTML = '<br/>';
-        }
+        // const content = ev.target.innerText;
+        // if (!content) {
+        //     ev.target.innerHTML = '<br/>';
+        // }
         const selections = window.getSelection();
         const range = selections.getRangeAt(0);
         // this.lastRange = range;
@@ -351,6 +324,23 @@ class ChatEditor extends Component {
         }
     }
 
+    // onKeyUp = (ev) => {
+    //     const keyCode = ev.keyCode;
+    //     if (keyCode === 8) { // 删至Mention块的时候，追加末尾<br/>
+    //         const selection = window.getSelection();
+    //         const range = selection.getRangeAt(0);
+    //         let prevChar;
+    //         try {
+    //             range.setStart(range.startContainer, range.startOffset - 1);
+    //             prevChar = range.toString();
+    //         } catch(e) {}
+    //         range.collapse();
+    //         if (prevChar && prevChar.length > 1) {
+    //             document.execCommand('insertHtml', null, '<br/>');
+    //         }
+    //     }
+    // }
+
     getHtml() {
         if (this.editor) {
             return this.editor.innerHTML;
@@ -484,7 +474,7 @@ class ChatEditor extends Component {
                     <div className="editor-lb" onClick={this.closeLightBox}>
                         <img src={_state.currentImage} />
                     </div>
-                :null}
+                : null}
                 <div className="editor"
                     // ref="editor"
                     ref={this.setEditor}
@@ -494,8 +484,9 @@ class ChatEditor extends Component {
                     onFocus={this.onFocus}
                     onPaste={this.onPaste}
                     onKeyDown={this.onKeyDown}
+                    // onKeyUp={this.onKeyUp}
                     onSelect={this.onSelect}
-                    dangerouslySetInnerHTML={{__html: value || '<br/>'}}
+                    dangerouslySetInnerHTML={{__html: value || ''}}
                 />
             </div>
         );
